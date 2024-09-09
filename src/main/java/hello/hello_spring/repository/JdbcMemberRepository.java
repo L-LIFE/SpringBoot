@@ -10,48 +10,47 @@ import java.util.List;
 import java.util.Optional;
 
 
-
+//코드의 흐름을 알고 있으면 된다.
 public class JdbcMemberRepository implements MemberRepository{
 
     private final DataSource dataSource;
 
     public JdbcMemberRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-        //위와 같이 작성하게 되면 dataSource.getConnection()을 얻을 수 있음.
     }
+        //위와 같이 작성하게 되면 dataSource.getConnection()을 얻을 수 있음.
 
     @Override
     public Member save(Member member) {
-        String sql="insert into number(name) values(?)";
+        String sql = "insert into member(name) values(?)";
         //?는 파라미터 바인딩 떄문이다.
 
-        Connection conn=null;
-        PreparedStatement pstmt=null;
-        ResultSet rs=null; //결과를 받는 것.
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null; //결과를 받는 것.
 
 
 
 
 
-        try{
-            conn=getConnection();
-            pstmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //key옵션: DB에서 primary를 해야 id값을 얻을 수 있었음
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //key옵션: DB에서 primary를 해야 id값을 얻을 수 있었음
             //이를 해주는 문구임.
 
             pstmt.setString(1, member.getName());
-
             pstmt.executeUpdate();
-            rs= pstmt.getGeneratedKeys();
+            rs = pstmt.getGeneratedKeys(); //DB에 있는 내용을 꺼내온다.
 
-            if(rs.next()){
+            if (rs.next()) {
                 member.setId(rs.getLong(1));
-            }else {
+            } else {
                 throw new SQLException("id 조회 실패");
             }
             return member;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException(e);
-        }finally {
+        } finally {
             close(conn, pstmt, rs);
         }
     }
@@ -66,7 +65,7 @@ public class JdbcMemberRepository implements MemberRepository{
         try {
             conn =getConnection();
             pstmt=conn.prepareStatement(sql);
-            pstmt.setString(1, id);
+            pstmt.setLong(1, id);
 
             rs=pstmt.executeQuery();
 
@@ -102,7 +101,7 @@ public class JdbcMemberRepository implements MemberRepository{
             if(rs.next()){
                 Member member=new Member();
                 member.setId(rs.getLong("id"));
-                member.setId(rs.getString("name"));
+                member.setName(rs.getString("name"));
                 return Optional.of(member);
             }
             return Optional.empty();
@@ -116,62 +115,57 @@ public class JdbcMemberRepository implements MemberRepository{
 
     @Override
     public List<Member> findAll() {
-        String sql= "select * from memeber";
-
-        Connection conn=null;
-        PreparedStatement pstmt=null;
-        ResultSet rs= null;
-
-        try{
-            conn=getConnection();
-            pstmt=conn.prepareStatement(sql);
-            rs=pstmt.executeQuery();
-
-            List<Member> members=new ArrayList<>();
-            while (rs.next()){
-                Member member=new Member();
+        String sql = "select * from member";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            List<Member> members = new ArrayList<>();
+            while(rs.next()) {
+                Member member = new Member();
                 member.setId(rs.getLong("id"));
                 member.setName(rs.getString("name"));
                 members.add(member);
-
             }
             return members;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException(e);
-        }finally {
+        } finally {
             close(conn, pstmt, rs);
         }
     }
 
-    private Connection getConnection(){
+    private Connection getConnection() {
         return DataSourceUtils.getConnection(dataSource);
     }
 
-    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs){
-        try{
-            if(rs!=null){
+    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+        try {
+            if (rs != null) {
                 rs.close();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            if(pstmt!=null){
+            if (pstmt != null) {
                 pstmt.close();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        try{
-            if(conn!=null){
+        try {
+            if (conn != null) {
                 close(conn);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-    private void close(Connection conn) throws SQLException{
+    private void close(Connection conn) throws SQLException {
         DataSourceUtils.releaseConnection(conn, dataSource);
     }
 }
