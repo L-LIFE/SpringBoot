@@ -29,6 +29,7 @@ public class JdbcMemberRepository implements MemberRepository{
         PreparedStatement pstmt=null;
         ResultSet rs=null; //결과를 받는 것.
 
+
         try{
             conn=getConnection();
             pstmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //key옵션: DB에서 primary를 해야 id값을 얻을 수 있었음
