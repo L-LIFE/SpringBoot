@@ -1,13 +1,10 @@
-package hello.hello_spring.domain;
-
+package hello.hello_spring.controller;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Member {
-    private Long id;
+public class MemberForm {
     private String name;
-
 }

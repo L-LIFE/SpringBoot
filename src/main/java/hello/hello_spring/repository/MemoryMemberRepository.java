@@ -1,11 +1,15 @@
 package hello.hello_spring.repository;
 
 import hello.hello_spring.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+
+//이렇게 모든 곳에 어노테이션을 명시해줘야 코드를 작성해도 에러없이 실행이 잘 된다.
+@Repository
 public class MemoryMemberRepository implements  MemberRepository {
 
     private static Map<Long, Member> store=new HashMap<>();
