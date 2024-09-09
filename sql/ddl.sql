@@ -20,3 +20,6 @@ primary key (id)
 insert into member(name) values('spring');
 insert into member(name) values('spring2');
 --위와 같이 2문장을 적어주면 name에 spring이랑 spring2가 들어있음을 알 수 있음.
+
+--member안에 있는 내용을 모두 지운다.
+delete from member
