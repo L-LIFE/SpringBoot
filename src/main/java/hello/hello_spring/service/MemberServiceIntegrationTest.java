@@ -3,29 +3,31 @@ package hello.hello_spring.service;
 
 import hello.hello_spring.domain.Member;
 import hello.hello_spring.repository.MemberRepository;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+//import static org.assertj.core.api.Assertions.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 // 이부분 자꾸 Test에서 오류가 발생함.
 //보통 테스트할 때 테스트용 DB를 따로 구축하고 테스트를 한다.
 @SpringBootTest
 @Transactional
-
 class MemberServiceIntegrationTest {
     @Autowired
     MemberService memberService;
     @Autowired MemberRepository memberRepository;
+    //직접 사용하는 것이 아니라 따로 선언된 리포지토리를 사용하면 된다.
+
+    //아레의 코드는 실행 후 로백도 가능하다.
     @Test
     public void 회원가입() throws Exception {
         //Given
         Member member = new Member();
-        member.setName("spring");
+        member.setName("hello");
         //When
         Long saveId = memberService.join(member);
         //Then

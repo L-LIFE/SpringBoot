@@ -2,13 +2,11 @@ package hello.hello_spring.repository;
 
 import hello.hello_spring.domain.Member;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 
 //코드의 흐름을 알고 있으면 된다.
 public class JdbcMemberRepository implements MemberRepository{
@@ -29,10 +27,8 @@ public class JdbcMemberRepository implements MemberRepository{
         PreparedStatement pstmt = null;
         ResultSet rs = null; //결과를 받는 것.
 
-
-
-
-
+        //DB는 반환하는 과정이 필요하다. 그래야 데이터가 계속 안 쌓이면서 잘 관리가 된다.
+        //안 그러면 나중에 데이터가 쌓여 터지게 된다.
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //key옵션: DB에서 primary를 해야 id값을 얻을 수 있었음
