@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.3.3'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
+
 def queryDslVersion = '5.0.0'
 group = 'hello'
 version = '0.0.1-SNAPSHOT'
@@ -16,26 +17,27 @@ java {
 repositories {
 	mavenCentral()
 }
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter'
-	//implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	testImplementation 'org.assertj:assertj-core:3.24.2'
+
 
 	implementation 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	runtimeOnly 'com.h2database:h2'
 
+	// Spring Boot Test Starter, JUnit 5 포함
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.assertj:assertj-core:3.24.2'
 
-	//Entity관련 의존성
+	// Entity 관련 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 

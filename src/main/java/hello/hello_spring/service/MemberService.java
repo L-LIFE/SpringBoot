@@ -2,13 +2,10 @@ package hello.hello_spring.service;
 
 import hello.hello_spring.domain.Member;
 import hello.hello_spring.repository.MemberRepository;
-import hello.hello_spring.repository.MemoryMemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import javax.xml.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +15,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+
 
     @Autowired
     public MemberService(MemberRepository memberRepository){
@@ -35,13 +34,25 @@ public class MemberService {
      * @return
      */
     public Long join(Member member) {
-        //같은 이름이 있는 중복 회원X
-        //Optional<Member> result= memberRepository.findByName(member.getName());
-        //위와 같이 쓰는 건 보기 안 좋은 코드
-        ValidatorDuplicateMember(member); //중복 회원 검증
-        //위의 코드처럼 어떤 문장이 필요한지는 ctrl+M을 누르면 되는 듯.
-        memberRepository.save(member);
-        return member.getId();
+
+        long start= System.currentTimeMillis();
+
+        try {
+            //같은 이름이 있는 중복 회원X
+            //Optional<Member> result= memberRepository.findByName(member.getName());
+            //위와 같이 쓰는 건 보기 안 좋은 코드
+            ValidatorDuplicateMember(member); //중복 회원 검증
+            //위의 코드처럼 어떤 문장이 필요한지는 ctrl+M을 누르면 되는 듯.
+            memberRepository.save(member);
+            return member.getId();
+        }finally {
+            long finish = System.currentTimeMillis();
+            long timeMs= finish-start;
+
+            System.out.println("join= "+timeMs+"ms");
+
+        }
+
     }
 
     private void ValidatorDuplicateMember(Member member) {
